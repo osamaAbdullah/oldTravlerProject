@@ -13,30 +13,35 @@
             <div class="three fields">
                 <div class="field">
                     <label>First Name</label>
-                    <input placeholder="First Name" name="first_name" type="text">
+                    <input placeholder="First Name" name="first_name"value="{{Request::old('first_name')}}" type="text">
                 </div>
                 <div class="field">
                     <label>Middle Name</label>
-                    <input placeholder="Middle Name" name="middle_name" type="text">
+                    <input placeholder="Middle Name" name="middle_name"value="{{Request::old('middle_name')}}" type="text">
                 </div>
                 <div class="field">
                     <label>Last Name</label>
-                    <input placeholder="Last Name" name="last_name" type="text">
+                    <input placeholder="Last Name" name="last_name"value="{{Request::old('last_name')}}" type="text">
                 </div>
             </div>
 
             <div class="three fields">
                 <div class="field">
                     <label>Email</label>
-                    <input placeholder="Email"name="email" type="text">
+                    <input placeholder="Email"name="email"value="{{Request::old('email')}}" type="text">
                 </div>
                 <div class="field">
                     <label>Phone Number</label>
-                    <input placeholder="0000 000 0000"name="phone_number" type="text">
+                    <input placeholder="0000 000 0000"name="phone_number"value="{{Request::old('phone_number')}}" type="text">
                 </div>
                 <div class="field">
                     <label>Birthday</label>
-                    <input placeholder="Birthday"name="birthday"type="text">
+                    <div class="ui calendar">
+                        <div class="ui input fluid left icon">
+                            <i class="calendar icon"></i>
+                            <input type="text"autocomplete="off"name="birthday"value="{{Request::old('birthday')}}"placeholder="0000-00-00">
+                        </div>
+                    </div>
                 </div>
 
             </div>
@@ -63,21 +68,21 @@
             </div>
             <div class="field">
                 <label>Bio</label>
-                <input name="bio"type="text"placeholder="Bio">
+                <input name="bio"value="{{Request::old('bio')}}"type="text"placeholder="Bio">
             </div>
             <div class="field">
                 <label>Vehicle-Bio</label>
-                <input name="vehicle_bio"type="text"placeholder="Bio">
+                <input name="vehicle_bio"value="{{Request::old('vehicle_bio')}}"type="text"placeholder="Bio">
             </div>
 
             <div class="two fields">
                 <div class="field">
                     <label>Address</label>
-                    <input name="address"type="text"placeholder="Address">
+                    <input name="address"value="{{Request::old('address')}}"type="text"placeholder="Address">
                 </div>
                 <div class="field">
                     <label>Max-Passenger</label>
-                    <input name="max_pass"type="number"placeholder="Max-Passenger">
+                    <input name="max_pass"value="{{Request::old('max_pass')}}"type="number"placeholder="Max-Passenger">
                 </div>
             </div>
 
@@ -106,19 +111,38 @@
     </div>
 @endsection
 @section('scripts')
+    <script src="{{asset('js/calendar.js')}}"></script>
     <script>
         $('.ui.dropdown').dropdown();
+        $('.ui.calendar').calendar({
+            type: 'date',
+            formatter: {
+                date:function(date,settings) {
+                    if (!date) return '';
+                    var day = date.getDate() + '';
+                    if (day.length < 2) {
+                        day = '0' + day;
+                    }
+                    var month = (date.getMonth() + 1) + '';
+                    if (month.length < 2) {
+                        month = '0' + month;
+                    }
+                    var year = date.getFullYear();
+                    return year + '-' + month + '-' + day;
+                }
+            }
+        });
         $('.ui.form').form({
             on     : 'change',
             inline : true,
-            /*fields: {
+            fields: {
                 first_name: {
                     identifier: 'first_name',
                     rules: [
                         {
                             type   : 'empty'
                         },{
-                            type   : 'maxLength[191]'
+                            type   : 'maxLength[100]'
                         }
                     ]
                 },
@@ -128,7 +152,7 @@
                         {
                             type   : 'empty'
                         },{
-                            type   : 'maxLength[191]'
+                            type   : 'maxLength[100]'
                         }
                     ]
                 },
@@ -138,7 +162,7 @@
                         {
                             type   : 'empty'
                         },{
-                            type   : 'maxLength[191]'
+                            type   : 'maxLength[100]'
                         }
                     ]
                 },
@@ -148,7 +172,7 @@
                         {
                             type   : 'empty'
                         },{
-                            type   : 'maxLength[25]'
+                            type   : 'maxLength[68]'
                         },{
                             type   : 'minLength[6]'
                         }
@@ -163,10 +187,6 @@
                         },
                         {
                             type   : 'empty'
-                        },
-
-                        {
-                            type   : 'minLength[6]'
                         }
                     ]
                 },
@@ -174,8 +194,11 @@
                     identifier  : 'email',
                     rules: [
                         {
-                            type   : 'email',
-                            prompt : 'Please enter a valid Email'
+                            type   : 'empty'
+                        }, {
+                            type   : 'email'
+                        },{
+                            type   : 'maxLength[150]'
                         }
                     ]
                 },
@@ -185,7 +208,7 @@
                         {
                             type   : 'empty'
                         },{
-                            type   : 'maxLength[35]'
+                            type   : 'maxLength[30]'
                         },{
                             type   : 'minLength[11]'
                         },{
@@ -193,17 +216,11 @@
                         }
                     ]
                 },
-                age: {
-                    identifier  : 'age',
+                birthday: {
+                    identifier  : 'birthday',
                     rules: [
                         {
                             type   : 'empty'
-                        },{
-                            type   : 'maxLength[35]'
-                        },{
-                            type   : 'minLength[2]'
-                        },{
-                            type   : 'integer'
                         }
                     ]
                 },
@@ -215,17 +232,49 @@
                         }
                     ]
                 },
-                user_name: {
-                    identifier  : 'user_name',
+                type_of_vehicle: {
+                    identifier  : 'type_of_vehicle',
                     rules: [
                         {
                             type   : 'empty'
-                        },{
-                            type   : 'maxLength[191]'
+                        }
+                    ]
+                },
+                address: {
+                    identifier  : 'address',
+                    rules: [
+                        {
+                            type   : 'empty'
+                        }
+                    ]
+                },
+                bio: {
+                    identifier  : 'bio',
+                    rules: [
+                        {
+                            type   : 'maxLength[255]'
+                        }
+                    ]
+                },
+                vehicle_bio: {
+                    identifier  : 'vehicle_bio',
+                    rules: [
+                        {
+                            type   : 'maxLength[255]'
+                        }
+                    ]
+                },
+                max_pass: {
+                    identifier  : 'max_pass',
+                    rules: [
+                        {
+                            type   : 'empty'
+                        } ,{
+                            type    : 'integer'
                         }
                     ]
                 }
-            }*/
+            }
         });
     </script>
 @stop

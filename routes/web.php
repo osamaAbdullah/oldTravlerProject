@@ -1,9 +1,9 @@
 <?php
 
-Route::get('/',function(){return view('index');});
+Route::get('/',function(){return view('index');})->name('home');
 
 Route::prefix('passengers')->group(function() {
-    // Authentication Routes...
+// Authentication Routes...
     Route::get('login', 'Passenger\Auth\LoginController@showLoginForm')->name('passengers.login');
     Route::post('login', 'Passenger\Auth\LoginController@login');
     Route::post('logout', 'Passenger\Auth\LoginController@logout')->name('passengers.logout');
@@ -17,6 +17,17 @@ Route::prefix('passengers')->group(function() {
     Route::post('password/email', 'Passenger\Auth\ForgotPasswordController@sendResetLinkEmail')->name('passengers.password.email');
     Route::get('password/reset/{token}', 'Passenger\Auth\ResetPasswordController@showResetForm')->name('passengers.password.reset');
     Route::post('password/reset', 'Passenger\Auth\ResetPasswordController@reset');
+
+//dashboard
+    Route::get('dashboard', 'Passenger\PassengersController@showDashboard')->name('passengers.dashboard.show');
+
+//profile
+    Route::get('profile', 'Passenger\PassengersController@showProfile')->name('passengers.profile.show');
+
+//createAppointment
+    Route::get('createAppointment', 'Passenger\PassengersController@createAppointment')->name('passengers.create.appointment');
+//saveAppointment
+    Route::post('saveAppointment', 'Passenger\PassengersController@saveAppointment')->name('passengers.save.appointment');
 });
 
 Route::prefix('drivers')->group(function() {
@@ -34,4 +45,16 @@ Route::prefix('drivers')->group(function() {
     Route::post('password/email', 'Driver\Auth\ForgotPasswordController@sendResetLinkEmail')->name('drivers.password.email');
     Route::get('password/reset/{token}', 'Driver\Auth\ResetPasswordController@showResetForm')->name('drivers.password.reset');
     Route::post('password/reset', 'Driver\Auth\ResetPasswordController@reset');
+
+//dashboard
+    Route::get('dashboard', 'Driver\DriversController@showDashboard')->name('drivers.dashboard.show');
+
+
+//profile
+    Route::get('profile/{driver}', 'Driver\DriversController@showProfile')->name('drivers.profile.show');
 });
+
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

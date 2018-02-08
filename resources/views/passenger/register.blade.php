@@ -12,30 +12,30 @@
             <div class="three fields">
                 <div class="field">
                     <label>First Name</label>
-                    <input placeholder="First Name" name="first_name" type="text">
+                    <input placeholder="First Name" name="first_name"value="{{Request::old('first_name')}}" type="text">
                 </div>
                 <div class="field">
                     <label>Middle Name</label>
-                    <input placeholder="Middle Name" name="middle_name" type="text">
+                    <input placeholder="Middle Name" name="middle_name"value="{{Request::old('middle_name')}}" type="text">
                 </div>
                 <div class="field">
                     <label>Last Name</label>
-                    <input placeholder="Last Name" name="last_name" type="text">
+                    <input placeholder="Last Name" name="last_name"value="{{Request::old('last_name')}}" type="text">
                 </div>
             </div>
 
             <div class="three fields">
                 <div class="field">
                     <label>Email</label>
-                    <input placeholder="Email"name="email" type="text">
+                    <input placeholder="Email"name="email"value="{{Request::old('email')}}" type="text">
                 </div>
                 <div class="field">
                     <label>Phone Number</label>
-                    <input placeholder="0000 000 0000"name="phone_number" type="text">
+                    <input placeholder="0000 000 0000"name="phone_number"value="{{Request::old('phone_number')}}" type="text">
                 </div>
                 <div class="field">
                     <label>Address</label>
-                    <input placeholder="Address"name="address" type="text">
+                    <input placeholder="Address"name="address"value="{{Request::old('address')}}" type="text">
                 </div>
             </div>
             <div class="ui divider" style="margin:30px 0 20px 0"></div>
@@ -50,12 +50,17 @@
                 </div>
                 <div class="field">
                     <label>Birthday</label>
-                    <input name="birthday"type="text"placeholder="Birthday">
+                    <div class="ui calendar">
+                        <div class="ui input fluid left icon">
+                            <i class="calendar icon"></i>
+                            <input type="text"autocomplete="off"name="birthday"value="{{Request::old('birthday')}}"placeholder="0000-00-00">
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="field">
                 <label>Bio</label>
-                <input name="bio"type="text"placeholder="Bio">
+                <input name="bio"value="{{Request::old('bio')}}"type="text"placeholder="Bio">
             </div>
             <div class="two fields">
                 <div class="field">
@@ -82,19 +87,38 @@
     </div>
 @endsection
 @section('scripts')
+    <script src="{{asset('js/calendar.js')}}"></script>
     <script>
         $('.ui.dropdown').dropdown();
-        $('.ui.form').form({
+        $('.ui.calendar').calendar({
+            type: 'date',
+            formatter: {
+                date:function(date,settings) {
+                    if (!date) return '';
+                    var day = date.getDate() + '';
+                    if (day.length < 2) {
+                        day = '0' + day;
+                    }
+                    var month = (date.getMonth() + 1) + '';
+                    if (month.length < 2) {
+                        month = '0' + month;
+                    }
+                    var year = date.getFullYear();
+                    return year + '-' + month + '-' + day;
+                }
+            }
+        });
+        $('form').form({
             on     : 'change',
             inline : true,
-           /* fields: {
+            fields: {
                 first_name: {
                     identifier: 'first_name',
                     rules: [
                         {
                             type   : 'empty'
                         },{
-                            type   : 'maxLength[191]'
+                            type   : 'maxLength[100]'
                         }
                     ]
                 },
@@ -104,7 +128,7 @@
                         {
                             type   : 'empty'
                         },{
-                            type   : 'maxLength[191]'
+                            type   : 'maxLength[100]'
                         }
                     ]
                 },
@@ -114,7 +138,7 @@
                         {
                             type   : 'empty'
                         },{
-                            type   : 'maxLength[191]'
+                            type   : 'maxLength[100]'
                         }
                     ]
                 },
@@ -124,7 +148,7 @@
                         {
                             type   : 'empty'
                         },{
-                            type   : 'maxLength[25]'
+                            type   : 'maxLength[68]'
                         },{
                             type   : 'minLength[6]'
                         }
@@ -136,12 +160,11 @@
                         {
                             type   : 'match[password]',
                             prompt : 'Your password doesn\'t match'
-                        },
-                        {
+                        }, {
                             type   : 'empty'
-                        },
-
-                        {
+                        },{
+                            type   : 'maxLength[68]'
+                        },{
                             type   : 'minLength[6]'
                         }
                     ]
@@ -150,8 +173,11 @@
                     identifier  : 'email',
                     rules: [
                         {
-                            type   : 'email',
-                            prompt : 'Please enter a valid Email'
+                            type   : 'empty'
+                        }, {
+                            type   : 'email'
+                        },{
+                            type   : 'maxLength[150]'
                         }
                     ]
                 },
@@ -161,7 +187,7 @@
                         {
                             type   : 'empty'
                         },{
-                            type   : 'maxLength[35]'
+                            type   : 'maxLength[30]'
                         },{
                             type   : 'minLength[11]'
                         },{
@@ -169,17 +195,11 @@
                         }
                     ]
                 },
-                age: {
-                    identifier  : 'age',
+                birthday: {
+                    identifier  : 'birthday',
                     rules: [
                         {
                             type   : 'empty'
-                        },{
-                            type   : 'maxLength[35]'
-                        },{
-                            type   : 'minLength[2]'
-                        },{
-                            type   : 'integer'
                         }
                     ]
                 },
@@ -191,17 +211,23 @@
                         }
                     ]
                 },
-                user_name: {
-                    identifier  : 'user_name',
+                bio: {
+                    identifier  : 'bio',
                     rules: [
                         {
-                            type   : 'empty'
-                        },{
-                            type   : 'maxLength[191]'
+                            type   : 'maxLength[255]'
+                        }
+                    ]
+                },
+                address: {
+                    identifier  : 'address',
+                    rules: [
+                        {
+                            type   : 'maxLength[100]'
                         }
                     ]
                 }
-            }*/
+            }
         });
     </script>
 @stop

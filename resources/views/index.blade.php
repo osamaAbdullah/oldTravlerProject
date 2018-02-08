@@ -101,29 +101,20 @@
     </style>
     <script src="{{ asset('js/ui.js') }}"></script>
     <script>
-        $(document)
-            .ready(function() {
-
+        $(document).ready(function() {
                 // fix menu when passed
-                $('.masthead')
-                    .visibility({
-                        once: false,
-                        onBottomPassed: function() {
+                $('.masthead').visibility({
+                    once: false,
+                    onBottomPassed: function() {
                             $('.fixed.menu').transition('fade in');
                         },
                         onBottomPassedReverse: function() {
                             $('.fixed.menu').transition('fade out');
                         }
-                    })
-                ;
-
+                    });
                 // create sidebar and attach to menu open
-                $('.ui.sidebar')
-                    .sidebar('attach events', '.toc.item')
-                ;
-
-            })
-        ;
+                $('.ui.sidebar').sidebar('attach events', '.toc.item');
+            });
     </script>
 </head>
 <body>
@@ -146,21 +137,10 @@
     </div>
 </div>
 
-<!-- Sidebar Menu -->
-<div class="ui vertical inverted sidebar menu">
-    <a class="active item">Home</a>
-    <a class="item">Work</a>
-    <a class="item">Company</a>
-    <a class="item">Careers</a>
-    <a class="item">Login</a>
-    <a class="item">Signup</a>
-</div>
-
 
 <!-- Page Contents -->
 <div class="pusher">
     <div class="ui inverted vertical masthead center aligned segment">
-
         <div class="ui container">
             <div class="ui large secondary inverted pointing menu">
                 <a class="toc item">
@@ -171,25 +151,90 @@
                 <a class="item">Company</a>
                 <a class="item">Careers</a>
                 <div class="right item">
+                    @if (!Auth::guard('web')->check()&!Auth::guard('driver')->check())
+                        <div class="ui dropdown button">
+                            <i class="sign in icon"></i>
+                            <span>Sign In</span>
+                            <div class="menu">
+                                <a class="item" href="{{route('passengers.login')}}">
+                                    <i class="male icon"></i>
+                                    Sign In as Passenger
+                                </a>
+                                <a class="item"href="{{route('drivers.login')}}">
+                                    <i class="taxi icon"></i>
+                                    Sign In as Driver
+                                </a>
+                            </div>
+                        </div>
 
-                    @if (!Auth::guard('web')->check()&&!Auth::guard('driver')->check())
-                        <a class="ui inverted button"href="{{route('passengers.login')}}">p Log in</a>
-                        <a class="ui inverted button"href="{{route('passengers.register')}}">p Sign Up</a>
-                        <a class="ui inverted button"href="{{route('drivers.login')}}">D Log in</a>
-                        <a class="ui inverted button"href="{{route('drivers.register')}}">D Sign Up</a>
+                        <div class="ui dropdown button">
+                            <i class="signup icon"></i>
+                            <span>Sign Up</span>
+                            <div class="menu">
+                                <a class="item" href="{{route('passengers.register')}}">
+                                    <i class="male icon"></i>
+                                    Sign Up as Passenger
+                                </a>
+                                <a class="item"href="{{route('drivers.register')}}">
+                                    <i class="taxi icon"></i>
+                                    Sign Up as Driver
+                                </a>
+                            </div>
+                        </div>
                     @endif
+
                     @if (Auth::guard('driver')->check())
-                        <form action="{{ route('drivers.logout') }}" method="POST">
-                            {{ csrf_field() }}
-                            <input type="submit"value="driver">
-                        </form>
+                        <div class="ui floating labeled icon dropdown">
+                            <i class="setting icon"></i>
+                            <span>{{  Auth::guard('driver')->user()->first_name }}</span>
+                            <div class="menu">
+                                <a class="item" href="{{route('drivers.profile.show',Auth::guard('driver')->user()->id)}}">
+                                    <i class="user icon"></i>
+                                    Profile
+                                </a>
+                                <a class="item" href="{{route('drivers.dashboard.show')}}">
+                                    <i class="dashboard icon"></i>
+                                    DashBoard
+                                </a>
+                                <a class="item" onclick="logout()">
+                                    <form id="logout" style="display:none" action="{{ route('drivers.logout') }}" method="POST">
+                                        {{ csrf_field() }}
+                                        <input type="submit"value="Logout D"class="ui inverted button">
+                                    </form>
+                                    <i class="sign out icon"></i>
+                                    Logout
+                                </a>
+
+                            </div>
+                        </div>
                     @endif
+
                     @if (Auth::guard('web')->check())
-                        <form action="{{ route('passengers.logout') }}" method="POST">
-                            {{ csrf_field() }}
-                            <input type="submit" value="passenger">
-                        </form>
+                        <div class="ui floating labeled icon dropdown">
+                            <i class="setting icon"></i>
+                            <span>{{  Auth::guard('web')->user()->first_name }}</span>
+                            <div class="menu">
+                                <a class="item" href="{{route('passengers.profile.show',Auth::guard('web')->user()->id)}}">
+                                    <i class="user icon"></i>
+                                    Profile
+                                </a>
+                                <a class="item" href="{{route('passengers.dashboard.show')}}">
+                                    <i class="dashboard icon"></i>
+                                    DashBoard
+                                </a>
+                                <a class="item" onclick="logout()">
+                                    <form id="logout" style="display:none" action="{{ route('passengers.logout') }}" method="POST">
+                                        {{ csrf_field() }}
+                                        <input type="submit"value="Logout D"class="ui inverted button">
+                                    </form>
+                                    <i class="sign out icon"></i>
+                                    Logout
+                                </a>
+                            </div>
+                        </div>
                     @endif
+
+
                 </div>
             </div>
         </div>
@@ -289,5 +334,11 @@
 </div>
 
 </body>
-
+<script>
+    $('.ui.dropdown').dropdown();
+    function logout()
+    {
+        $('#logout').submit();
+    }
+</script>
 </html>
