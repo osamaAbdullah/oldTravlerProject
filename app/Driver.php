@@ -38,4 +38,8 @@ class Driver extends Authenticatable
     {
         $this->notify(new DriverResetPasswordNotification($token));
     }
+    public function appointments()
+    {
+        return $this->hasMany('App\Appointment');
+    }
 }

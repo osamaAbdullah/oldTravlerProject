@@ -5,7 +5,7 @@
             <br>
             <h1>START NEW JOURNEY WITH US</h1>
             <br>
-            <form class="ui form" method="POST" action="{{route('passengers.save.appointment')}}">
+            <form class="ui form" method="POST" action="{{route('driver.save.appointment')}}">
                 {{csrf_field()}}
                 <div class="two fields">
                     <div class="field">
@@ -45,16 +45,14 @@
                 </div>
                 <div class="two fields">
                     <div class="field">
-                        <label>Minimum Number Of Passenger<span style="color:#e57373;margin-left:10px">(optional)</span></label>
+                        <label>Minimum Number Of Passenger</label>
                         <input type="number" name="min_number_of_passenger"
                                value="{{Request::old('min_number_of_passenger')}}"
                                placeholder="Minimum Number Of Passenger">
                     </div>
                     <div class="field">
-                        <label>Maximum Number Of Passenger<span style="color:#e57373;margin-left:10px">(optional)</span></label>
-                        <input type="number" name="max_number_of_passenger"
-                               value="{{Request::old('max_number_of_passenger')}}"
-                               placeholder="Maximum Number Of Passenger">
+                        <label>Maximum Number Of Passenger</label>
+                        <input type="number"name="max_number_of_passenger"value="{{Auth::user()->max_pass}}"placeholder="Maximum Number Of Passenger">
                     </div>
                 </div>
                 <div class="two fields">
@@ -64,6 +62,13 @@
                                placeholder="Price Per Passenger">
                     </div>
                     <div class="field">
+                        <label>Price Per Mail</label>
+                        <input type="number" name="price_per_mail" value="{{Request::old('price_per_mail')}}"
+                               placeholder="Price Per Mail">
+                    </div>
+                </div>
+                <div class="two fields">
+                    <div class="field">
                         <label>Date</label>
                         <div class="ui calendar">
                             <div class="ui input fluid left icon">
@@ -71,6 +76,10 @@
                                 <input autocomplete="off"name="travel_date"placeholder="0000-00-00"value="{{Request::old('travel_date')}}">
                             </div>
                         </div>
+                    </div>
+                    <div class="field">
+                        <label>Note<span style="color:#e57373;margin-left:10px">(optional)</span></label>
+                        <input type="text" name="note" value="{{Request::old('note')}}" placeholder="Note">
                     </div>
                 </div>
                 <div class="two fields">
@@ -83,10 +92,6 @@
                         <label>End Time</label>
                         <input type="time" name="end_time" value="{{Request::old('end_time')}}" placeholder="End Time">
                     </div>
-                </div>
-                <div class="field">
-                    <label>Note<span style="color:#e57373;margin-left:10px">(optional)</span></label>
-                    <input type="text" name="note" value="{{Request::old('note')}}" placeholder="Note">
                 </div>
                 <div class="field">
                     <div class="ui checkbox" style="margin-top: 20px; margin-left:10px; ">
@@ -165,11 +170,15 @@
                 },
                 min_number_of_passenger: {
                     identifier: 'min_number_of_passenger',
-                    rules: [{type: 'number'}, {type: 'maxLength[2]'}]
+                    rules: [{type: 'empty'},{type: 'number'}, {type: 'maxLength[2]'}]
                 },
                 max_number_of_passenger: {
                     identifier: 'max_number_of_passenger',
-                    rules: [{type: 'number'}, {type: 'maxLength[2]'}]
+                    rules: [{type: 'empty'},{type: 'number'}, {type: 'maxLength[2]'}]
+                },
+                price_per_mail: {
+                    identifier: 'price_per_mail',
+                    rules: [{type: 'empty'}, {type: 'number'}, {type: 'maxLength[6]'}]
                 },
                 price_per_passenger: {
                     identifier: 'price_per_passenger',

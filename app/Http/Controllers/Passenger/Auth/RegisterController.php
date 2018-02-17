@@ -41,7 +41,7 @@ class RegisterController extends Controller
             'email' => 'required|string|email|max:255|unique:passengers',
             'birthday' => 'required|date',
             'gender' => 'required|boolean',
-            'bio' => 'string|max:255',
+            'bio' => 'sometimes|max:255',
             'address' => 'string|max:255',
             'password' => 'required|min:6|confirmed',
         ]);

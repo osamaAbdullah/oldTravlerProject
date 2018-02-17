@@ -40,5 +40,8 @@ class Passenger extends Authenticatable
     {
         $this->notify(new PassengerResetPasswordNotification($token));
     }
-
+    public function appointments ()
+    {
+        return $this->belongsToMany('App\Appointment')->withTimestamps()->withPivot('number_of_passengers', 'number_of_mail');
+    }
 }

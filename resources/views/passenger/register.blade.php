@@ -59,7 +59,7 @@
                 </div>
             </div>
             <div class="field">
-                <label>Bio</label>
+                <label>Bio<span style="color:#e57373;margin-left:10px">(optional)</span></label>
                 <input name="bio"value="{{Request::old('bio')}}"type="text"placeholder="Bio">
             </div>
             <div class="two fields">
@@ -223,6 +223,8 @@
                     identifier  : 'address',
                     rules: [
                         {
+                            type   : 'empty'
+                        },{
                             type   : 'maxLength[100]'
                         }
                     ]

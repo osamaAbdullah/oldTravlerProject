@@ -7,7 +7,7 @@
             {{ csrf_field() }}
             <h4 class="ui horizontal divider header">
                 <i class="signup icon"></i>
-                Registration
+                Driver Registration
             </h4>
             <br>
             <div class="three fields">
@@ -67,11 +67,11 @@
                 </div>
             </div>
             <div class="field">
-                <label>Bio</label>
+                <label>Bio<span style="color:#e57373;margin-left:10px">(optional)</span></label>
                 <input name="bio"value="{{Request::old('bio')}}"type="text"placeholder="Bio">
             </div>
             <div class="field">
-                <label>Vehicle-Bio</label>
+                <label>Vehicle-Bio<span style="color:#e57373;margin-left:10px">(optional)</span></label>
                 <input name="vehicle_bio"value="{{Request::old('vehicle_bio')}}"type="text"placeholder="Bio">
             </div>
 

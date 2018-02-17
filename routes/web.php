@@ -22,12 +22,28 @@ Route::prefix('passengers')->group(function() {
     Route::get('dashboard', 'Passenger\PassengersController@showDashboard')->name('passengers.dashboard.show');
 
 //profile
-    Route::get('profile', 'Passenger\PassengersController@showProfile')->name('passengers.profile.show');
+    Route::get('profile/{passenger}', 'Passenger\PassengersController@showProfile')->name('passengers.profile.show');
 
 //createAppointment
     Route::get('createAppointment', 'Passenger\PassengersController@createAppointment')->name('passengers.create.appointment');
 //saveAppointment
     Route::post('saveAppointment', 'Passenger\PassengersController@saveAppointment')->name('passengers.save.appointment');
+//editAppointment
+    Route::get('editAppointment/{appointment}', 'Passenger\PassengersController@editAppointment')->name('passengers.edit.appointment');
+//updateAppointment
+    Route::POST('updateAppointment/{appointment}', 'Passenger\PassengersController@updateAppointment')->name('passengers.update.appointment');
+//cancelAppointment
+    Route::POST('cancelAppointment/{appointment}', 'Passenger\PassengersController@cancelAppointment')->name('passengers.cancel.appointment');
+//searchAppointment
+    Route::GET('searchAppointment', 'Passenger\PassengersController@searchAppointment')->name('passenger.search.appointment');
+
+//viewAppointment
+    Route::GET('viewAppointment/{appointment}', 'Passenger\PassengersController@viewAppointment')->name('passenger.view.appointment');
+
+//bookingAppointmentForm
+    Route::GET('bookingAppointmentForm/{appointment}', 'Passenger\PassengersController@bookingAppointmentForm')->name('passenger.booking.appointment.form');
+//bookAppointment
+    Route::GET('bookAppointment/{appointment}', 'Passenger\PassengersController@bookAppointment')->name('passengers.book.appointment');
 });
 
 Route::prefix('drivers')->group(function() {
@@ -49,12 +65,27 @@ Route::prefix('drivers')->group(function() {
 //dashboard
     Route::get('dashboard', 'Driver\DriversController@showDashboard')->name('drivers.dashboard.show');
 
-
 //profile
     Route::get('profile/{driver}', 'Driver\DriversController@showProfile')->name('drivers.profile.show');
+
+//createAppointment
+    Route::get('createAppointment', 'Driver\DriversController@createAppointment')->name('driver.create.appointment');
+//saveAppointment
+    Route::post('saveAppointment', 'Driver\DriversController@saveAppointment')->name('driver.save.appointment');
+//editAppointment
+    Route::get('editAppointment/{appointment}', 'Driver\DriversController@editAppointment')->name('driver.edit.appointment');
+//updateAppointment
+    Route::POST('updateAppointment/{appointment}', 'Driver\DriversController@updateAppointment')->name('driver.update.appointment');
+//cancelAppointment
+    Route::POST('cancelAppointment/{appointment}', 'Driver\DriversController@cancelAppointment')->name('driver.cancel.appointment');
+//searchAppointment
+    Route::GET('searchAppointment', 'Driver\DriversController@searchAppointment')->name('driver.search.appointment');
+
+//viewAppointment
+    Route::GET('viewAppointment/{appointment}', 'Driver\DriversController@viewAppointment')->name('driver.view.appointment');
+
+//bookingAppointmentForm
+    Route::GET('bookingAppointmentForm/{appointment}', 'Driver\DriversController@bookingAppointmentForm')->name('driver.booking.appointment.form');
+//bookAppointment
+    Route::GET('bookAppointment/{appointment}', 'Driver\DriversController@bookAppointment')->name('driver.book.appointment');
 });
-
-
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');

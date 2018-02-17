@@ -146,7 +146,7 @@
                 <a class="toc item">
                     <i class="sidebar icon"></i>
                 </a>
-                <a class="active item">Home</a>
+                <a class="active item"href="{{route('home')}}">Home</a>
                 <a class="item">Work</a>
                 <a class="item">Company</a>
                 <a class="item">Careers</a>
@@ -182,7 +182,6 @@
                             </div>
                         </div>
                     @endif
-
                     @if (Auth::guard('driver')->check())
                         <div class="ui floating labeled icon dropdown">
                             <i class="setting icon"></i>

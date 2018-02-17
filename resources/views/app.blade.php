@@ -4,12 +4,9 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
     <title>{{ config('app.name', 'Laravel') }}</title>
-
     <!-- Styles -->
     <link href="{{ asset('css/ui.css') }}" rel="stylesheet">
 </head>
@@ -20,7 +17,7 @@
         <a class="toc item">
             <i class="sidebar icon"></i>
         </a>
-        <a class="active item">Home</a>
+        <a class="active item"href="{{route('home')}}">Home</a>
         <a class="item">Work</a>
         <a class="item">Company</a>
         <a class="item">Careers</a>
@@ -56,74 +53,70 @@
                     </div>
                 </div>
             @endif
+                @if (Auth::guard('driver')->check())
+                    <div class="ui floating labeled icon dropdown">
+                        <i class="setting icon"></i>
+                        <span>{{  Auth::guard('driver')->user()->first_name }}</span>
+                        <div class="menu">
+                            <a class="item" href="{{route('drivers.profile.show',Auth::guard('driver')->user()->id)}}">
+                                <i class="user icon"></i>
+                                Profile
+                            </a>
+                            <a class="item" href="{{route('drivers.dashboard.show')}}">
+                                <i class="dashboard icon"></i>
+                                DashBoard
+                            </a>
+                            <a class="item" onclick="logout()">
+                                <form id="logout" style="display:none" action="{{ route('drivers.logout') }}" method="POST">
+                                    {{ csrf_field() }}
+                                    <input type="submit"value="Logout D"class="ui inverted button">
+                                </form>
+                                <i class="sign out icon"></i>
+                                Logout
+                            </a>
 
-            @if (Auth::guard('driver')->check())
-                <div class="ui floating labeled icon dropdown">
-                    <i class="setting icon"></i>
-                    <span>{{  Auth::guard('driver')->user()->first_name }}</span>
-                    <div class="menu">
-                        <a class="item" href="{{route('drivers.profile.show',Auth::guard('driver')->user()->id)}}">
-                            <i class="user icon"></i>
-                            Profile
-                        </a>
-                        <a class="item" href="{{route('drivers.dashboard.show')}}">
-                            <i class="dashboard icon"></i>
-                            DashBoard
-                        </a>
-                        <a class="item" onclick="logout()">
-                            <form id="logout" style="display:none" action="{{ route('drivers.logout') }}" method="POST">
-                                {{ csrf_field() }}
-                                <input type="submit"value="Logout D"class="ui inverted button">
-                            </form>
-                            <i class="sign out icon"></i>
-                            Logout
-                        </a>
-
+                        </div>
                     </div>
-                </div>
-            @endif
+                @endif
 
-            @if (Auth::guard('web')->check())
-                <div class="ui floating labeled icon dropdown">
-                    <i class="setting icon"></i>
-                    <span>{{  Auth::guard('web')->user()->first_name }}</span>
-                    <div class="menu">
-                        <a class="item" href="{{route('passengers.profile.show',Auth::guard('web')->user()->id)}}">
-                            <i class="user icon"></i>
-                            Profile
-                        </a>
-                        <a class="item" href="{{route('passengers.dashboard.show')}}">
-                            <i class="dashboard icon"></i>
-                            DashBoard
-                        </a>
-                        <a class="item" onclick="logout()">
-                            <form id="logout" style="display:none" action="{{ route('passengers.logout') }}" method="POST">
-                                {{ csrf_field() }}
-                                <input type="submit"value="Logout D"class="ui inverted button">
-                            </form>
-                            <i class="sign out icon"></i>
-                            Logout
-                        </a>
+                @if (Auth::guard('web')->check())
+                    <div class="ui floating labeled icon dropdown">
+                        <i class="setting icon"></i>
+                        <span>{{  Auth::guard('web')->user()->first_name }}</span>
+                        <div class="menu">
+                            <a class="item" href="{{route('passengers.profile.show',Auth::guard('web')->user()->id)}}">
+                                <i class="user icon"></i>
+                                Profile
+                            </a>
+                            <a class="item" href="{{route('passengers.dashboard.show')}}">
+                                <i class="dashboard icon"></i>
+                                DashBoard
+                            </a>
+                            <a class="item" onclick="logout()">
+                                <form id="logout" style="display:none" action="{{ route('passengers.logout') }}" method="POST">
+                                    {{ csrf_field() }}
+                                    <input type="submit"value="Logout D"class="ui inverted button">
+                                </form>
+                                <i class="sign out icon"></i>
+                                Logout
+                            </a>
+                        </div>
                     </div>
-                </div>
-            @endif
-
-
+                @endif
         </div>
     </div>
 </div>
 </div>
-    <div id="app">
+    <div id="app"style="margin-top: 50px">
         @include('partials._messages')
         @yield('content')
     </div>
 </body>
-
 <!-- Scripts -->
 <script src="{{ asset('js/ui.js') }}"></script>
-
 @yield('scripts')
 <script>
     $('.ui.dropdown').dropdown();
+    function logout() {$('#logout').submit();}
 </script>
-</html>
+</html>  
