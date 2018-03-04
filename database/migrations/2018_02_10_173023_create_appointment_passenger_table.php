@@ -14,6 +14,7 @@ class CreateAppointmentPassengerTable extends Migration
             $table->unsignedInteger('appointment_id');
             $table->unsignedInteger('number_of_passengers')->nullable();
             $table->unsignedInteger('number_of_mail')->nullable();
+            $table->boolean('verification')->nullable();
             $table->timestamps();
         });
     }

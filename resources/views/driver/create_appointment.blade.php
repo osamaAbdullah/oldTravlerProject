@@ -5,18 +5,32 @@
             <br>
             <h1>START NEW JOURNEY WITH US</h1>
             <br>
-            <form class="ui form" method="POST" action="{{route('driver.save.appointment')}}">
+            <form class="ui form" method="POST" action="{{route('drivers.save.appointment')}}">
                 {{csrf_field()}}
                 <div class="two fields">
                     <div class="field">
                         <label>Current City</label>
-                        <input type="text" name="current_city" value="{{Request::old('current_city')}}"
-                               placeholder="Current City">
+                        <select class="ui search dropdown"name="current_city">
+                            <option value="">From:</option>
+                            <?php
+                            foreach ($cities as $city)
+                            {
+                                echo '<option value="'.$city->name.'">'.$city->name.'</option>';
+                            }
+                            ?>
+                        </select>
                     </div>
                     <div class="field">
                         <label>Destination City</label>
-                        <input type="text" name="destination_city" value="{{Request::old('destination_city')}}"
-                               placeholder="Destination City">
+                        <select class="ui search dropdown"name="destination_city">
+                            <option value="">To:</option>
+                            <?php
+                            foreach ($cities as $city)
+                            {
+                                echo '<option value="'.$city->name.'">'.$city->name.'</option>';
+                            }
+                            ?>
+                        </select>
                     </div>
                 </div>
                 <div class="two fields">

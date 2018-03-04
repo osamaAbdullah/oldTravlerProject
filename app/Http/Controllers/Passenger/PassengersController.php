@@ -4,28 +4,45 @@ namespace App\Http\Controllers\Passenger;
 
 use App\Appointment;
 use App\Passenger;
+use App\PassengerRequest;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\ValidationException;
 
+//Passenger
 class PassengersController extends Controller
 {
+    //constructor
+    public function __construct()
+    {
+        $this->middleware('auth:web');
+    }
+
+    //show dashboard
     public function showDashboard()
     {
-        $passenger = Passenger::find(Auth::user()->id);
-        return view('passenger.dashboard')->withPassenger($passenger->appointments);
+        $passenger = Passenger::find(Auth::guard('web')->user()->id);
+        return view('passenger.dashboard',['passenger'=> $passenger->appointments ,'passenger_requests'=> $passenger->passenger_requests ]);
     }
+
+    //show profile
     public function showProfile(Passenger $passenger)
     {
         return view('passenger.profile',['passenger' => $passenger]);
     }
-    public function createAppointment()
+
+    //create Request show appointment form
+    public function createRequest()
     {
-        return view('passenger.create_appointment');
+        $cities = DB::select('SELECT `name` FROM `cities`');
+        return view('passenger.create_request',['cities' => $cities]);
     }
-    public function saveAppointment(Request $request)
+
+    //save the Request to the database
+    public function saveRequest(Request $request)
     {
         $this->validate($request, array(
             'current_city' => 'required|max:50',
@@ -34,45 +51,40 @@ class PassengersController extends Controller
             'destination_spot' => 'sometimes|max:50',
             'number_of_passengers' => 'required|numeric',
             'number_of_mail' => 'required|numeric',
-            'time_is_fixed' => 'sometimes',
             'travel_date' => 'required|date',
-            'start_time' => 'required',
-            'end_time' => 'sometimes',
             'notes' => 'sometimes|max:255',
         ));
-        $appointment = new Appointment ;
-        $appointment->current_city = $request->current_city;
-        $appointment->current_spot = $request->current_spot;
-        $appointment->destination_city = $request->destination_city;
-        $appointment->destination_spot = $request->destination_spot;
-        $appointment->number_of_passengers = $request->number_of_passengers;
-        $appointment->number_of_mail = $request->number_of_mail;
-        $appointment->time_is_fixed = ($request->time_is_fixed == 'on') ? true : false;
-        $appointment->travel_date = $request->travel_date;
-        $appointment->start_time = $request->start_time;
-        $appointment->end_time = ($request->time_is_fixed == 'on') ? null : $request->end_time;
-        $appointment->price_per_passenger = $request->price_per_passenger;
-        $appointment->price_per_mail = 0;
-        $appointment->min_number_of_passenger = $request->min_number_of_passenger;
-        $appointment->max_number_of_passenger = $request->max_number_of_passenger;
-        $appointment->note = $request->note;
-        $appointment->save();
-        $appointment->passengers()->attach(Auth::user()->id);
+        $passengerRequest = new PassengerRequest ;
+        $passengerRequest->current_city = $request->current_city;
+        $passengerRequest->current_spot = $request->current_spot;
+        $passengerRequest->destination_city = $request->destination_city;
+        $passengerRequest->destination_spot = $request->destination_spot;
+        $passengerRequest->number_of_passengers = $request->number_of_passengers;
+        $passengerRequest->number_of_mail = $request->number_of_mail;
+        $passengerRequest->travel_date = $request->travel_date;
+        $passengerRequest->driver_id = null;
+        $passengerRequest->passenger_id = Auth::guard('web')->user()->id;
+        $passengerRequest->note = $request->note;
+        $passengerRequest->save();
 
-
-
-        Session::flash('success', 'The appointment created successfully ');
+        Session::flash('success', 'The Request is created successfully You will be notified as soon as appointment is created');
         return redirect()->route('passengers.dashboard.show');
     }
 
-    public function editAppointment (Appointment $appointment)
+    //edit the Request show edit form
+    public function editRequest ($id)
     {
-        return view('passenger.edit_appointment',['appointment'=>$appointment]);
+        $cities = DB::select('SELECT `name` FROM `cities`');
+        $passengerRequest = PassengerRequest::find($id);
+        if ($passengerRequest->passenger_id != Auth::guard('web')->user()->id )
+            throw ValidationException::withMessages('Only the creator can edit the the request');
+        return view('passenger.edit_request',['passengerRequest'=>$passengerRequest,'cities' => $cities]);
     }
 
-    public function updateAppointment(Request $request,Appointment $appointment)
+    //save edition changes to the database
+    public function updateRequest(Request $request,$id)
     {
-        dd('maintenance');
+        $passengerRequest = PassengerRequest::find($id);
         $this->validate($request, array(
             'current_city' => 'required|max:50',
             'destination_city' => 'required|max:50',
@@ -80,63 +92,97 @@ class PassengersController extends Controller
             'destination_spot' => 'sometimes|max:50',
             'number_of_passengers' => 'required|numeric',
             'number_of_mail' => 'required|numeric',
-            'time_is_fixed' => 'sometimes',
-            'start_time' => 'required',
-            'end_time' => 'sometimes',
+            'travel_date' => 'required|date',
             'notes' => 'sometimes|max:255',
         ));
+        $passengerRequest->current_city = $request->current_city;
+        $passengerRequest->current_spot = $request->current_spot;
+        $passengerRequest->destination_city = $request->destination_city;
+        $passengerRequest->destination_spot = $request->destination_spot;
+        $passengerRequest->number_of_passengers = $request->number_of_passengers;
+        $passengerRequest->number_of_mail = $request->number_of_mail;
+        $passengerRequest->travel_date = $request->travel_date;
+        $passengerRequest->note = $request->note;
+        $passengerRequest->update();
 
-        $appointment->current_city = $request->current_city;
-        $appointment->current_spot = $request->current_spot;
-        $appointment->destination_city = $request->destination_city;
-        $appointment->destination_spot = $request->destination_spot;
-        $appointment->number_of_passengers = $request->number_of_passengers;
-        $appointment->number_of_mail = $request->number_of_mail;
-        $appointment->time_is_fixed = ($request->time_is_fixed == 'on') ? true : false;
-        $appointment->start_time = $request->start_time;
-        $appointment->end_time = ($request->time_is_fixed == 'on') ? null : $request->end_time;
-        $appointment->price_per_passenger = $request->price_per_passenger;
-        $appointment->price_per_mail = 0;
-        $appointment->min_number_of_passenger = $request->min_number_of_passenger;
-        $appointment->max_number_of_passenger = $request->max_number_of_passenger;
-        $appointment->note = $request->note;
-        $appointment->save();
-        $appointment->passengers()->attach(Auth::user()->id);
-
-
-        Session::flash('success', 'Your Email was Sent!');
+        Session::flash('success', 'The Request is updated successfully You will be notified as soon as an appointment is created');
         return redirect()->route('passengers.dashboard.show');
     }
+
+    //cancel the Request
+    public function cancelRequest ($id)
+    {
+        $passengerRequest = PassengerRequest::find($id);
+        if ($passengerRequest->driver_id==null)
+        {
+            $passengerRequest->delete();
+        } else {
+            throw ValidationException::withMessages(['You have to cancel the appointment first']);
+        }
+        Session::flash('success', 'The Request is deleted successfully');
+        return redirect()->route('passengers.dashboard.show');
+    }
+
+    //view the appointment
+    public function viewRequest (PassengerRequest $passengerRequest)
+    {
+        return view('passenger.view_request',['passengerRequest' => $passengerRequest]);
+    }
+
+    //cancel the appointment ???????????????
     public function cancelAppointment (Appointment $appointment)
     {
-
-        $appointment->passengers()->detach(Auth::user()->id);
-//        $appointment->number_of_passengers += $request->number_of_passengers ;
-//        $appointment->number_of_mail += $request->number_of_mail ;
-        if(sizeof($appointment->passengers)==0)
+        foreach ($appointment->passengers as $passenger)
+        {
+            if ($passenger->id == Auth::guard('web')->user()->id)
+            {
+                $appointment->number_of_passengers -= $passenger->pivot->number_of_passengers ;
+                $appointment->number_of_mail -= $passenger->pivot->number_of_mail ;
+                break;
+            }
+        }
+        $appointment->update();
+        $appointment->passengers()->detach(Auth::guard('web')->user()->id);
+        if(sizeof($appointment->passengers) == 0 && $appointment->driver_id == null)
             $appointment->delete();
+        
         Session::flash('success', 'You canceled the appointment');
         return redirect()->route('passengers.dashboard.show');
     }
 
+    //search the appointment
     public function searchAppointment(Request $request)
     {
-        $appointments = Appointment::where('destination_city','LIKE','%'.$request->term.'%')->get();
+        $appointments = DB::select('SELECT * FROM `appointments` WHERE `destination_city` LIKE \'%'.$request->term.'%\' OR `destination_spot` LIKE \'%'.$request->term.'%\' ');
         $results = [];
         foreach ($appointments as $appointment){
-            $results [] = [ 'title' => $appointment->destination_city.' / '.$appointment->destination_spot , 'description' => $appointment->start_time  ."<br>". $appointment->travel_date, 'url' => route('passenger.view.appointment',$appointment->id) ];
+            $results [] = [
+                'from' => $appointment->current_city.' - '.$appointment->current_spot ,
+                'to'=> $appointment->destination_city.' - '.$appointment->destination_spot ,
+                'date' => $appointment->travel_date ,
+                'time' => $appointment->start_time ,
+                'driver' => $appointment->driver_id ,
+                'note' => $appointment->note,
+                'updated_at' => $appointment->updated_at ,
+                'url' => route('passenger.view.appointment',$appointment->id)
+            ];
         }
         return response($results);
     }
 
+    //view the appointment
     public function viewAppointment (Appointment $appointment)
     {
         return view('passenger.view_appointment',['appointment' => $appointment]);
     }
+
+    //show booking form
     public function bookingAppointmentForm (Appointment $appointment)
     {
         return view('passenger.booking_appointment_form',['appointment' => $appointment]);
     }
+
+    //save the booked appointment to the database
     public function bookAppointment(Request $request,Appointment $appointment)
     {
         $this->validate($request, array(
@@ -148,9 +194,10 @@ class PassengersController extends Controller
         $appointment->number_of_passengers += $request->number_of_passengers ;
         $appointment->number_of_mail += $request->number_of_mail ;
         $appointment->update();
-        $appointment->passengers()->attach(Auth::user()->id);
+        $passenger = Passenger::find(Auth::guard('web')->user()->id);
+        $appointment->passengers()->save($passenger,['number_of_passengers'=>$request->number_of_passengers,'number_of_mail'=>$request->number_of_mail,'verification'=>false]);
 
-        Session::flash('success', 'You successfully booked your seat');
+        Session::flash('success', 'You successfully requested to book the appointment');
         return redirect()->route('passengers.dashboard.show');
     }
 }

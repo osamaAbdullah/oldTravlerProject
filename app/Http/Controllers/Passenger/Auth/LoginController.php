@@ -21,11 +21,10 @@ class LoginController extends Controller
     }
 
     public function logout()
-{
-    $this->guard()->logout();
-    return redirect('/');
-}
-
+    {
+        $this->guard()->logout();
+        return redirect('/');
+    }
     protected $redirectTo = '/';
 
     public function __construct()

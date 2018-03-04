@@ -5,7 +5,7 @@
             <br>
             <h1>BOOKING</h1>
             <br>
-            <form class="ui form" method="GET" action="{{route('passengers.book.appointment',$appointment->id)}}">
+            <form class="ui form" method="GET" action="{{route('drivers.book.appointment',$appointment->id)}}">
                 {{csrf_field()}}
                 <div class="two fields">
                     <div class="field">

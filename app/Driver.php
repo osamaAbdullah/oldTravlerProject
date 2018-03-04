@@ -42,4 +42,9 @@ class Driver extends Authenticatable
     {
         return $this->hasMany('App\Appointment');
     }
+    public function passenger_requests()
+    {
+        return $this->hasMany('App\PassengerRequest');
+    }
+
 }

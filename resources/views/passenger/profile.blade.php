@@ -1,5 +1,50 @@
 @extends('app')
 @section('content')
+
+    <div class="container">
+        <div class="text-center" style="margin-top: 5px">
+           <img src="{{asset('images/user2.png')}}" class="img-circle" width="122" height="122">
+         </div>
+        <table class="table table-dark table-bordered">
+            <thead class="thead-light">
+            <tr>
+                <th scope="col">Full Name</th>
+                <th scope="col">Phone Number</th>
+                <th scope="col">E-mail</th>
+                <th scope="col">Birthday</th>
+                <th scope="col">gender</th>
+                <th scope="col">Weight</th>
+                <th scope="col">Height</th>
+                <th scope="col">Joined At </th>
+                <th scope="col">Updated At</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+
+
+                <td>{{$passenger->first_name .' '. $passenger->middle_name .' '. $passenger->last_name}}</td>
+            </tr>
+            <tr>
+
+
+            </tr>
+            <tr>
+
+            </tr>
+            </tbody>
+        </table>
+
+
+
+
+
+    </div>
+
+
+
+    <!--
     <div class="ui grid centered">
         <div class="row">
             <div class="four wide column"style="text-align: center">
@@ -75,6 +120,7 @@
             </div>
         </div>
     </div>
+    -->
 @endsection
 @section('scripts')
     <script>

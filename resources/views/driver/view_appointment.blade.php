@@ -83,7 +83,7 @@
                         </div>
                         <div class="content"style="text-align:center">
                             <p><strong>Are you sure you want to leave this appointment?</strong></p>
-                            <form id="{{$appointment->id}}"method="post"action="{{route('passengers.cancel.appointment',$appointment->id)}}">
+                            <form id="{{$appointment->id}}"method="post"action="{{route('drivers.cancel.appointment',$appointment->id)}}">
                                 {{csrf_field()}}
                                 <div class="actions">
                                     <div class="ui green ok inverted button"><i class="remove icon"></i>No</div>
@@ -94,7 +94,7 @@
                     </div>
                 @else
                     <div class="four wide column">
-                        <a id="book"class="ui button green fluid"href="{{route('driver.booking.appointment.form',$appointment->id)}}">Join</a>
+                        <a id="book"class="ui button green fluid"href="{{route('drivers.booking.appointment.form',$appointment->id)}}">Join</a>
                     </div>
                 @endif
                 <div class="four wide column">

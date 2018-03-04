@@ -3,31 +3,46 @@
     <div class="ui container">
         <div class="ui piled segment">
             <br>
-            <h1>START NEW JOURNEY WITH US</h1>
+            <h1>Update Your Request</h1>
             <br>
-            <form class="ui form" method="POST" action="{{route('passengers.save.appointment')}}">
+            <form method="POST" action="{{route('passengers.update.request',$passengerRequest->id)}}"class="ui form">
+                <input name="_method" type="hidden" value="PUT">
                 {{csrf_field()}}
                 <div class="two fields">
                     <div class="field">
                         <label>Current City</label>
-                        <input type="text" name="current_city" value="{{Request::old('current_city')}}"
-                               placeholder="Current City">
+                        <select class="ui search dropdown"name="current_city">
+                            <?php
+                            foreach ($cities as $city)
+                            {
+                                ($passengerRequest->current_city == $city->name)? $is_selected="selected":$is_selected="";
+                                echo '<option value="'.$city->name.'" '.$is_selected. '>'.$city->name.'</option>';
+                            }
+                            ?>
+                        </select>
                     </div>
                     <div class="field">
                         <label>Destination City</label>
-                        <input type="text" name="destination_city" value="{{Request::old('destination_city')}}"
-                               placeholder="Destination City">
+                        <select class="ui search dropdown"name="destination_city">
+                            <?php
+                            foreach ($cities as $city)
+                            {
+                                ($passengerRequest->destination_city == $city->name)? $is_selected="selected":$is_selected="";
+                                echo '<option value="'.$city->name.'" '.$is_selected. '>'.$city->name.'</option>';
+                            }
+                            ?>
+                        </select>
                     </div>
                 </div>
                 <div class="two fields">
                     <div class="field">
                         <label>Current Spot<span style="color:#e57373;margin-left:10px">(optional)</span></label>
-                        <input type="text" name="current_spot" value="{{Request::old('current_spot')}}"
+                        <input type="text" name="current_spot" value="{{$passengerRequest->current_spot}}"
                                placeholder="Current Spot">
                     </div>
                     <div class="field">
                         <label>Destination Spot<span style="color:#e57373;margin-left:10px">(optional)</span></label>
-                        <input type="text" name="destination_spot" value="{{Request::old('destination_spot')}}"
+                        <input type="text" name="destination_spot" value="{{$passengerRequest->destination_spot}}"
                                placeholder="Destination Spot">
                     </div>
                 </div>
@@ -35,65 +50,35 @@
                     <div class="field">
                         <label>Number Of Passengers</label>
                         <input type="number" name="number_of_passengers"
-                               value="{{Request::old('number_of_passengers')}}" placeholder="Number Of Passengers">
+                               value="{{$passengerRequest->number_of_passengers}}" placeholder="Number Of Passengers">
                     </div>
                     <div class="field">
                         <label>Number Of Mail</label>
-                        <input type="number" name="number_of_mail" value="{{Request::old('number_of_mail')}}"
+                        <input type="number" name="number_of_mail" value="{{$passengerRequest->number_of_mail}}"
                                placeholder="Number Of Mail">
                     </div>
                 </div>
+
+
+
+
                 <div class="two fields">
-                    <div class="field">
-                        <label>Minimum Number Of Passenger<span style="color:#e57373;margin-left:10px">(optional)</span></label>
-                        <input type="number" name="min_number_of_passenger"
-                               value="{{Request::old('min_number_of_passenger')}}"
-                               placeholder="Minimum Number Of Passenger">
-                    </div>
-                    <div class="field">
-                        <label>Maximum Number Of Passenger<span style="color:#e57373;margin-left:10px">(optional)</span></label>
-                        <input type="number" name="max_number_of_passenger"
-                               value="{{Request::old('max_number_of_passenger')}}"
-                               placeholder="Maximum Number Of Passenger">
-                    </div>
-                </div>
-                <div class="two fields">
-                    <div class="field">
-                        <label>Price Per Passenger</label>
-                        <input type="number" name="price_per_passenger" value="{{Request::old('price_per_passenger')}}"
-                               placeholder="Price Per Passenger">
-                    </div>
                     <div class="field">
                         <label>Date</label>
                         <div class="ui calendar">
                             <div class="ui input fluid left icon">
                                 <i class="calendar icon"></i>
-                                <input autocomplete="off"name="travel_date"placeholder="0000-00-00"value="{{Request::old('travel_date')}}">
+                                <input autocomplete="off"name="travel_date"placeholder="0000-00-00"value="{{$passengerRequest->travel_date}}">
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="two fields">
                     <div class="field">
-                        <label>Start Time</label>
-                        <input type="time" placeholder="Start Time" name="start_time"
-                               value="{{Request::old('start_time')}}">
-                    </div>
-                    <div class="field" id="end_time">
-                        <label>End Time</label>
-                        <input type="time" name="end_time" value="{{Request::old('end_time')}}" placeholder="End Time">
+                        <label>Note<span style="color:#e57373;margin-left:10px">(optional)</span></label>
+                        <input type="text" name="note" value="{{$passengerRequest->note}}" placeholder="Note">
                     </div>
                 </div>
-                <div class="field">
-                    <label>Note<span style="color:#e57373;margin-left:10px">(optional)</span></label>
-                    <input type="text" name="note" value="{{Request::old('note')}}" placeholder="Note">
-                </div>
-                <div class="field">
-                    <div class="ui checkbox" style="margin-top: 20px; margin-left:10px; ">
-                        <input type="checkbox" name="time_is_fixed">
-                        <label>time is fixed</label>
-                    </div>
-                </div>
+
+
                 <button class="ui button primary submit">Save Changes</button>
                 <div class="ui cancel button" id="cancel">Cancel</div>
             </form>
@@ -163,28 +148,8 @@
                     identifier: 'number_of_mail',
                     rules: [{type: 'empty'}, {type: 'number'}, {type: 'maxLength[2]'}]
                 },
-                min_number_of_passenger: {
-                    identifier: 'min_number_of_passenger',
-                    rules: [{type: 'number'}, {type: 'maxLength[2]'}]
-                },
-                max_number_of_passenger: {
-                    identifier: 'max_number_of_passenger',
-                    rules: [{type: 'number'}, {type: 'maxLength[2]'}]
-                },
-                price_per_passenger: {
-                    identifier: 'price_per_passenger',
-                    rules: [{type: 'empty'}, {type: 'number'}, {type: 'maxLength[6]'}]
-                },
                 travel_date: {
                     identifier: 'travel_date',
-                    rules: [{type: 'empty'}]
-                },
-                start_time: {
-                    identifier: 'start_time',
-                    rules: [{type: 'empty'}]
-                },
-                end_time: {
-                    identifier: 'end_time',
                     rules: [{type: 'empty'}]
                 },
                 note: {

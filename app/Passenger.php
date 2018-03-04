@@ -42,6 +42,10 @@ class Passenger extends Authenticatable
     }
     public function appointments ()
     {
-        return $this->belongsToMany('App\Appointment')->withTimestamps()->withPivot('number_of_passengers', 'number_of_mail');
+        return $this->belongsToMany('App\Appointment')->withTimestamps()->withPivot('number_of_passengers', 'number_of_mail','verification');
+    }
+    public function passenger_requests()
+    {
+        return $this->hasMany('App\PassengerRequest');
     }
 }

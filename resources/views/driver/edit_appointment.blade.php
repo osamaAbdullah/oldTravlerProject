@@ -5,91 +5,119 @@
             <br>
             <h1>Update</h1>
             <br>
-            <form class="ui form"method="POST"action="{{route('passengers.update.appointment',$appointment->id)}}">
+            <form class="ui form"method="POST"action="{{route('drivers.update.appointment',$appointment->id)}}">
                 {{csrf_field()}}
                 <div class="two fields">
                     <div class="field">
                         <label>Current City</label>
-                        <input type="text" name="current_city" value="{{$appointment->current_city}}"
-                               placeholder="Current City">
+                        <select class="ui search dropdown"name="current_city">
+                            <?php
+                            foreach ($cities as $city)
+                            {
+                                ($appointment->current_city == $city->name)? $is_selected="selected":$is_selected="";
+                                echo '<option value="'.$city->name.'" '.$is_selected. '>'.$city->name.'</option>';
+                            }
+                            ?>
+                        </select>
                     </div>
                     <div class="field">
                         <label>Destination City</label>
-                        <input type="text" name="destination_city" value="{{$appointment->destination_city}}"
-                               placeholder="Destination City">
+                        <select class="ui search dropdown"name="destination_city">
+                            <?php
+                            foreach ($cities as $city)
+                            {
+                                ($appointment->destination_city == $city->name)? $is_selected="selected":$is_selected="";
+                                echo '<option value="'.$city->name.'" '.$is_selected. '>'.$city->name.'</option>';
+                            }
+                            ?>
+                        </select>
                     </div>
                 </div>
-                <div class="two fields">
-                    <div class="field">
-                        <label>Current Spot<span style="color:#e57373;margin-left:10px">(optional)</span></label>
-                        <input type="text" name="current_spot" value="{{$appointment->current_spot}}"
-                               placeholder="Current Spot">
-                    </div>
-                    <div class="field">
-                        <label>Destination Spot<span style="color:#e57373;margin-left:10px">(optional)</span></label>
-                        <input type="text" name="destination_spot" value="{{$appointment->destination_spot}}"
-                               placeholder="Destination Spot">
-                    </div>
-                </div>
-                <div class="two fields">
-                    <div class="field">
-                        <label>Number Of Passengers</label>
-                        <input type="number" name="number_of_passengers"
-                               value="{{$appointment->number_of_passengers}}" placeholder="Number Of Passengers">
-                    </div>
-                    <div class="field">
-                        <label>Number Of Mail</label>
-                        <input type="number" name="number_of_mail" value="{{$appointment->number_of_mail}}"
-                               placeholder="Number Of Mail">
-                    </div>
-                </div>
-                <div class="two fields">
-                    <div class="field">
-                        <label>Minimum Number Of Passenger<span style="color:#e57373;margin-left:10px">(optional)</span></label>
-                        <input type="number" name="min_number_of_passenger"
-                               value="{{$appointment->min_number_of_passenger}}"
-                               placeholder="Minimum Number Of Passenger">
-                    </div>
-                    <div class="field">
-                        <label>Maximum Number Of Passenger<span style="color:#e57373;margin-left:10px">(optional)</span></label>
-                        <input type="number" name="max_number_of_passenger"
-                               value="{{$appointment->max_number_of_passenger}}"
-                               placeholder="Maximum Number Of Passenger">
-                    </div>
-                </div>
-                <div class="two fields">
-                    <div class="field">
-                        <label>Price Per Passenger</label>
-                        <input type="number" name="price_per_passenger" value="{{$appointment->price_per_passenger}}"
-                               placeholder="Price Per Passenger">
-                    </div>
-                    <div class="field">
-                        <label>Note<span style="color:#e57373;margin-left:10px">(optional)</span></label>
-                        <input type="text" name="note" value="{{$appointment->note}}" placeholder="Note">
-                    </div>
-                </div>
-                <div class="two fields">
-                    <div class="field">
-                        <label>Start Time</label>
-                        <input type="time" placeholder="Start Time" name="start_time"
-                               value="{{$appointment->start_time}}">
-                    </div>
-                    <div class="field" id="end_time">
-                        <label>End Time</label>
-                        <input type="time" name="end_time" value="{{$appointment->end_time}}" placeholder="End Time">
-                    </div>
-                </div>
-                <div class="field">
-                    <div class="ui checkbox" style="margin-top: 20px; margin-left:10px; ">
-                        <input type="checkbox" name="time_is_fixed">
-                        <label>time is fixed</label>
-                    </div>
-                </div>
-                <button class="ui button primary submit">Save Changes</button>
-                <div class="ui cancel button" id="cancel">Cancel</div>
-            </form>
-            <br>
+    <div class="two fields">
+        <div class="field">
+            <label>Current Spot<span style="color:#e57373;margin-left:10px">(optional)</span></label>
+            <input type="text" name="current_spot" value="{{$appointment->current_spot}}"
+                   placeholder="Current Spot">
         </div>
+        <div class="field">
+            <label>Destination Spot<span style="color:#e57373;margin-left:10px">(optional)</span></label>
+            <input type="text" name="destination_spot" value="{{$appointment->destination_spot}}"
+                   placeholder="Destination Spot">
+        </div>
+    </div>
+    <div class="two fields">
+        <div class="field">
+            <label>Number Of Passengers</label>
+            <input type="number" name="number_of_passengers"
+                   value="{{$appointment->number_of_passengers}}"placeholder="Number Of Passengers">
+        </div>
+        <div class="field">
+            <label>Number Of Mail</label>
+            <input type="number" name="number_of_mail" value="{{$appointment->number_of_mail}}"
+                   placeholder="Number Of Mail">
+        </div>
+    </div>
+    <div class="two fields">
+        <div class="field">
+            <label>Minimum Number Of Passenger</label>
+            <input type="number" name="min_number_of_passenger"
+                   value="{{$appointment->max_number_of_passenger}}"
+                   placeholder="Minimum Number Of Passenger">
+        </div>
+        <div class="field">
+            <label>Maximum Number Of Passenger</label>
+            <input type="number"name="max_number_of_passenger"value="{{Auth::guard('driver')->user()->max_pass}}"placeholder="Maximum Number Of Passenger">
+        </div>
+    </div>
+    <div class="two fields">
+        <div class="field">
+            <label>Price Per Passenger</label>
+            <input type="number"name="price_per_passenger"value="{{$appointment->price_per_passenger}}"
+                   placeholder="Price Per Passenger">
+        </div>
+        <div class="field">
+            <label>Price Per Mail</label>
+            <input type="number" name="price_per_mail" value="{{$appointment->price_per_mail}}"
+                   placeholder="Price Per Mail">
+        </div>
+    </div>
+    <div class="two fields">
+        <div class="field">
+            <label>Date</label>
+            <div class="ui calendar">
+                <div class="ui input fluid left icon">
+                    <i class="calendar icon"></i>
+                    <input autocomplete="off"name="travel_date"placeholder="0000-00-00"value="{{$appointment->travel_date}}">
+                </div>
+            </div>
+        </div>
+        <div class="field">
+            <label>Note<span style="color:#e57373;margin-left:10px">(optional)</span></label>
+            <input type="text" name="note" value="{{$appointment->note}}" placeholder="Note">
+        </div>
+    </div>
+    <div class="two fields">
+        <div class="field">
+            <label>Start Time</label>
+            <input type="time" placeholder="Start Time" name="start_time"
+                   value="{{$appointment->start_time}}">
+        </div>
+        <div class="field" id="end_time">
+            <label>End Time</label>
+            <input type="time" name="end_time" value="{{$appointment->end_time}}" placeholder="End Time">
+        </div>
+    </div>
+    <div class="field">
+        <div class="ui checkbox" style="margin-top: 20px; margin-left:10px; ">
+            <input type="checkbox" name="time_is_fixed"{{($appointment->time_is_fixed)? 'checked':''}}>
+            <label>time is fixed</label>
+        </div>
+    </div>
+    <button class="ui button primary submit">Save Changes</button>
+    <div class="ui cancel button" id="cancel">Cancel</div>
+    </form>
+    <br>
+    </div>
     </div>
 @endsection
 @section('scripts')
@@ -165,5 +193,10 @@
                 }
             }
         });
+        if ($('input[name=time_is_fixed]').attr('checked'))
+        {
+            $('#end_time').fadeOut(100);
+            $('.ui.form').form('remove field','end_time');
+        }
     </script>
 @endsection
