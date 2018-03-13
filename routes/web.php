@@ -49,6 +49,7 @@ Route::prefix('passengers')->group(function() {
     Route::GET('bookingAppointmentForm/{appointment}', 'Passenger\PassengersController@bookingAppointmentForm')->name('passenger.booking.appointment.form');
 //bookAppointment
     Route::GET('bookAppointment/{appointment}', 'Passenger\PassengersController@bookAppointment')->name('passengers.book.appointment');
+
 });
 
 Route::prefix('drivers')->group(function() {
@@ -98,4 +99,9 @@ Route::prefix('drivers')->group(function() {
     Route::GET('bookingAppointmentForm/{appointment}', 'Driver\DriversController@bookingAppointmentForm')->name('drivers.booking.appointment.form');
 //bookAppointment
     Route::GET('bookAppointment/{appointment}', 'Driver\DriversController@bookAppointment')->name('drivers.book.appointment');
+
+//acceptPassengerRequest
+    Route::GET('acceptPassengerRequest/{appointment}/{passenger}/{notification}', 'Driver\DriversController@acceptPassengerRequest')->name('passengers.accept.request');
+//rejectPassengerRequest
+    Route::GET('rejectPassengerRequest/{appointment}/{passenger}/{notification}', 'Driver\DriversController@rejectPassengerRequest')->name('passengers.reject.request');
 });

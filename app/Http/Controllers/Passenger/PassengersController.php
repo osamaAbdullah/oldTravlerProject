@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Passenger;
 
 use App\Appointment;
+use App\Driver;
 use App\Passenger;
 use App\PassengerRequest;
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -25,7 +27,13 @@ class PassengersController extends Controller
     public function showDashboard()
     {
         $passenger = Passenger::find(Auth::guard('web')->user()->id);
-        return view('passenger.dashboard',['passenger'=> $passenger->appointments ,'passenger_requests'=> $passenger->passenger_requests ]);
+        $appointments = [];
+        foreach ($passenger->appointments as $appointment)
+        {
+            if ($appointment->pivot->verification == 1)
+                $appointments[sizeof($appointments)] = $appointment;
+        }
+        return view('passenger.dashboard',['passenger'=> $appointments ,'passenger_requests'=> $passenger->passenger_requests ]);
     }
 
     //show profile
@@ -191,13 +199,10 @@ class PassengersController extends Controller
         ));
         if ($request->number_of_passengers + $appointment->number_of_passengers > $appointment->max_number_of_passenger)
             throw ValidationException::withMessages(['Number of passenger will be more than maximum']);
-        $appointment->number_of_passengers += $request->number_of_passengers ;
-        $appointment->number_of_mail += $request->number_of_mail ;
-        $appointment->update();
         $passenger = Passenger::find(Auth::guard('web')->user()->id);
         $appointment->passengers()->save($passenger,['number_of_passengers'=>$request->number_of_passengers,'number_of_mail'=>$request->number_of_mail,'verification'=>false]);
-
-        Session::flash('success', 'You successfully requested to book the appointment');
+        Driver::find($appointment->driver_id)->notify(new \App\Notifications\PassengerRequest(Auth::guard('web')->user()->id,$request->number_of_passengers,$request->number_of_mail,$appointment->id));
+        Session::flash('success', 'Request has been sent');
         return redirect()->route('passengers.dashboard.show');
     }
 }

@@ -5,258 +5,338 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
     <!-- Site Properties -->
     <title>Homepage | traveling</title>
-    <link rel="stylesheet"href="{{ asset('css/app.css') }}">
-    <link rel="stylesheet"href="{{ asset('css/mystyle.css') }}">
-    <link rel="stylesheet"href="{{asset('css/slider.css')}}">
+    <link href="{{ asset('css/ui.css') }}" rel="stylesheet">
+    <style type="text/css">
+
+        .hidden.menu {
+            display: none;
+        }
+
+        .masthead.segment {
+            min-height: 700px;
+            padding: 1em 0em;
+        }
+        .masthead .logo.item img {
+            margin-right: 1em;
+        }
+        .masthead .ui.menu .ui.button {
+            margin-left: 0.5em;
+        }
+        .masthead h1.ui.header {
+            margin-top: 3em;
+            margin-bottom: 0em;
+            font-size: 4em;
+            font-weight: normal;
+        }
+        .masthead h2 {
+            font-size: 1.7em;
+            font-weight: normal;
+        }
+
+        .ui.vertical.stripe {
+            padding: 8em 0em;
+        }
+        .ui.vertical.stripe h3 {
+            font-size: 2em;
+        }
+        .ui.vertical.stripe .button + h3,
+        .ui.vertical.stripe p + h3 {
+            margin-top: 3em;
+        }
+        .ui.vertical.stripe .floated.image {
+            clear: both;
+        }
+        .ui.vertical.stripe p {
+            font-size: 1.33em;
+        }
+        .ui.vertical.stripe .horizontal.divider {
+            margin: 3em 0em;
+        }
+
+        .quote.stripe.segment {
+            padding: 0em;
+        }
+        .quote.stripe.segment .grid .column {
+            padding-top: 5em;
+            padding-bottom: 5em;
+        }
+
+        .footer.segment {
+            padding: 5em 0em;
+        }
+
+        .secondary.pointing.menu .toc.item {
+            display: none;
+        }
+
+        @media only screen and (max-width: 700px) {
+            .ui.fixed.menu {
+                display: none !important;
+            }
+            .secondary.pointing.menu .item,
+            .secondary.pointing.menu .menu {
+                display: none;
+            }
+            .secondary.pointing.menu .toc.item {
+                display: block;
+            }
+            .masthead.segment {
+                min-height: 350px;
+            }
+            .masthead h1.ui.header {
+                font-size: 2em;
+                margin-top: 1.5em;
+            }
+            .masthead h2 {
+                margin-top: 0.5em;
+                font-size: 1.5em;
+            }
+        }
+
+
+    </style>
+    <script src="{{ asset('js/ui.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+                // fix menu when passed
+                $('.masthead').visibility({
+                    once: false,
+                    onBottomPassed: function() {
+                            $('.fixed.menu').transition('fade in');
+                        },
+                        onBottomPassedReverse: function() {
+                            $('.fixed.menu').transition('fade out');
+                        }
+                    });
+                // create sidebar and attach to menu open
+                $('.ui.sidebar').sidebar('attach events', '.toc.item');
+            });
+    </script>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg my-nav navbar-dark bg-dark">
-        <a class="navbar-brand" href="{{route('home')}}"><img src="{{ asset('images/unnamed.png') }}" width="30" height="30" class="d-inline-block align-top" alt="">
-            Fast Traveling
-        </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"><i class="fa fa-bars" aria-hidden="true"></i></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <div class="container">
-            <ul class="navbar-nav ml-auto nav-justified">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Features</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Pricing</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">AboutUs</a>
-                </li>
-            </ul>
-        </div>
-        <div class="container" style="padding-left: 100px;">
-            @if (!Auth::guard('web')->check()&!Auth::guard('driver')->check())
-                <div class="btn-group" role="group" style="padding-left: 40px;">
-                    <button id="btnGroupDrop1" type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Sign In
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="btnGroupDrop1" style="margin-left: -25px;background-color: #999999;">
-                        <a class="dropdown-item" href="{{route('passengers.login')}}">Passenger</a>
-                        <a class="dropdown-item" href="{{route('drivers.login')}}">Driver</a>
-                    </div>
-                </div>
-                <div class="btn-group" role="group" style="margin-left: 8px;">
-                    <button id="btnGroupDrop1" type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Sign Up
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="btnGroupDrop1" style="background-color: #999999;">
-                        <a class="dropdown-item" href="{{route('passengers.register')}}">Passenger</a>
-                        <a class="dropdown-item" href="{{route('drivers.register')}}">Driver</a>
-                    </div>
-                </div>
-            @endif
-            @if (Auth::guard('driver')->check())
-                <div class="dropdown" style="padding-left: 100px;">
-                    <button class="btn btn-danger dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {{  Auth::guard('driver')->user()->first_name }}
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="margin-left: 55px;">
-                        <a class="dropdown-item"href="{{route('drivers.profile.show',Auth::guard('driver')->user()->id)}}">
-                            <i class="user icon"></i>
-                            Profile
-                        </a>
-                        <a class="dropdown-item"href="{{route('drivers.dashboard.show')}}">
-                            <i class="dashboard icon"></i>
-                            DashBoard
-                        </a>
-                        <a class="dropdown-item"onclick="logout()">
-                            <form id="logout" style="display:none" action="{{ route('drivers.logout') }}" method="POST">
-                                {{ csrf_field() }}
-                                <input type="submit"value="Logout D"class="ui inverted button">
-                            </form>
-                            <i class="sign out icon"></i>
-                            Logout
-                        </a>
-                    </div>
-                </div>
-            @endif
-            @if (Auth::guard('web')->check())
-                <div class="dropdown" style="padding-left: 100px;">
-                    <button class="btn btn-danger dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {{  Auth::guard('web')->user()->first_name }}
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="margin-left: 55px;">
-                        <a class="dropdown-item"href="{{route('passengers.profile.show',Auth::guard('web')->user()->id)}}">
-                            <i class="user icon"></i>
-                            Profile
-                        </a>
-                        <a class="dropdown-item"href="{{route('passengers.dashboard.show')}}">
-                            <i class="dashboard icon"></i>
-                            DashBoard
-                        </a>
-                        <a class="dropdown-item"onclick="logout()">
-                            <form id="logout" style="display:none" action="{{ route('passengers.logout') }}" method="POST">
-                                {{ csrf_field() }}
-                                <input type="submit"value="Logout D"class="ui inverted button">
-                            </form>
-                            <i class="sign out icon"></i>
-                            Logout
-                        </a>
-                    </div>
-                </div>
-            @endif
-        </div>
-    </div>
-</nav>
-<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-    <ol class="carousel-indicators">
-        <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-        <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-        <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
-    </ol>
-    <div class="carousel-inner">
-        <div class="carousel-item active">
-            <img class="d-block w-100" src="{{ asset('images/tt.jpg') }}" alt="First slide">
-            <div class="carousel-caption d-none d-md-block" style="top:50%;">
-                <h2>WELCOME TO FAST TRAVELING</h2>
 
-                <button class="btn btn-lg btn-danger">CREATE PROFILE</button>
-
+<!-- Following Menu -->
+<div class="ui large top fixed hidden menu">
+    <div class="ui container">
+        <a class="active item">Home</a>
+        <a class="item">Work</a>
+        <a class="item">Company</a>
+        <a class="item">Careers</a>
+        <div class="right menu">
+            <div class="item">
+                <a class="ui button">Log in</a>
             </div>
-        </div>
-        <div class="carousel-item">
-            <img class="d-block w-100" src="{{ asset('images/ll.jpg') }}" alt="Second slide">
-            <div class="carousel-caption d-none d-md-block" style="top:50%;">
-                <h2>FAST TIME IN TIME</h2>
-                <p>WITH FAST TRAVELING <br> YOU WILL BE IN YOUR PALCE <br> IN TIME</p>
-                <button class="btn btn-lg btn-danger">CHECK TRAVELING</button>
-            </div>
-        </div>
-
-        <div class="carousel-item">
-            <img class="d-block w-100" src="{{ asset('images/bb.jpg') }}" alt="Third slide">
-            <div class="carousel-caption d-none d-md-block" style="top:50%;">
-                <h2>PICK UP YOUR BAG <br> TRAVEL NOW</h2>
-
-                <button class="btn btn-lg btn-danger">CLICK HERE</button>
-            </div>
-        </div>
-
-    </div>
-    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="sr-only">Previous</span>
-    </a>
-    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="sr-only">Next</span>
-    </a>
-
-</div>
-<div class="container text-center mb-5">
-    <div class="row">
-        <div class="col-md-12">
-            <h2>OUR <strong class="text-primary">FEATURES</strong></h2>
-            <p>Fast Vachel's , Safety Tour , Less Money , MORE AND MORE </p>
-        </div>
-    </div>
-</div>
-<div class="container-fluid choose">
-    <div class="container pt-4 pb-4">
-        <div class="row text-center mb-4">
-            <div class="col-md-12">
-                <h2 class="text-primary">OUR SERVICES</h2>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-4">
-                <div class="card upper-card">
-                    <div class="icon"><i class="fa fa-bullhorn" aria-hidden="true"></i></div>
-                    <div class="card-body">
-                        <h3>Car</h3>
-                        <p>Our car is a brand model with fast engine<br>brand seat , cold chiller ,  </p>
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="col-md-4">
-                <div class="card upper-card">
-                    <div class="icon"><i class="fa fa-bullhorn" aria-hidden="true"></i></div>
-                    <div class="card-body">
-                        <h3>Bus</h3>
-                        <p>Our bus is a brand model with fast engine<br>brand seat , cold chiller ,  </p>
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="col-md-4">
-                <div class="card upper-card">
-                    <div class="icon"><i class="fa fa-bullhorn" aria-hidden="true"></i></div>
-                    <div class="card-body">
-                        <h3>MiniBus</h3>
-                        <p>Our Mini is a brand model <br>with fast engine brand seat </p>
-                    </div>
-                </div>
-
+            <div class="item">
+                <a class="ui primary button">Sign Up</a>
             </div>
         </div>
     </div>
 </div>
-<div class="container mt-5">
-    <div class="row text-center">
-        <div class="col-md-12">
-            <h2>WHY <strong class="text-primary">CHOOSE</strong> US</h2>
-        </div>
-    </div>
 
-    <div class="row text-center">
-        <div class="col-md-8 offset-md-2">
-            We think that , we are first system in <strong class="text-primary">KURDISTAN</strong> , for more year ,there was a problem
-            <br> with the traveling in case <strong class="text-primary">DORMITORY</strong> , which Student can not go back to home in time
-            <br>or waiting or More and More Problem , So most of Students choose <strong class="text-primary">FAST TRAVELING</strong>
-        </div>
-    </div>
 
-    <div class="row mt-5">
-        <div class="col-md-6">
-            <img src="{{ asset('images/taxi_car.png') }}" alt="image" class="img-fluid m-auto">
-        </div>
-        <div class="col-md-6">
-            <p>Now , Know about US from Below</p>
+<!-- Page Contents -->
+<div class="pusher">
+    <div class="ui inverted vertical masthead center aligned segment">
+        <div class="ui container">
+            <div class="ui large secondary inverted pointing menu">
+                <a class="toc item">
+                    <i class="sidebar icon"></i>
+                </a>
+                <a class="active item"href="{{route('home')}}">Home</a>
+                <a class="item">Work</a>
+                <a class="item">Company</a>
+                <a class="item">Careers</a>
+                <div class="right item">
+                    @if (!Auth::guard('web')->check()&!Auth::guard('driver')->check())
+                        <div class="ui dropdown button">
+                            <i class="sign in icon"></i>
+                            <span>Sign In</span>
+                            <div class="menu">
+                                <a class="item" href="{{route('passengers.login')}}">
+                                    <i class="male icon"></i>
+                                    Sign In as Passenger
+                                </a>
+                                <a class="item"href="{{route('drivers.login')}}">
+                                    <i class="taxi icon"></i>
+                                    Sign In as Driver
+                                </a>
+                            </div>
+                        </div>
 
-            <div class="media">
-                <i class="fa fa-at" aria-hidden="true"></i>
-                <div class="media-body">
-                    <h5 class="mt-0">e-Mail</h5>
+                        <div class="ui dropdown button">
+                            <i class="signup icon"></i>
+                            <span>Sign Up</span>
+                            <div class="menu">
+                                <a class="item" href="{{route('passengers.register')}}">
+                                    <i class="male icon"></i>
+                                    Sign Up as Passenger
+                                </a>
+                                <a class="item"href="{{route('drivers.register')}}">
+                                    <i class="taxi icon"></i>
+                                    Sign Up as Driver
+                                </a>
+                            </div>
+                        </div>
+                    @endif
+                    @if (Auth::guard('driver')->check())
+                        <div class="ui floating labeled icon dropdown">
+                            <i class="setting icon"></i>
+                            <span>{{  Auth::guard('driver')->user()->first_name }}</span>
+                            <div class="menu">
+                                <a class="item" href="{{route('drivers.profile.show',Auth::guard('driver')->user()->id)}}">
+                                    <i class="user icon"></i>
+                                    Profile
+                                </a>
+                                <a class="item" href="{{route('drivers.dashboard.show')}}">
+                                    <i class="dashboard icon"></i>
+                                    DashBoard
+                                </a>
+                                <a class="item" onclick="logout()">
+                                    <form id="logout" style="display:none" action="{{ route('drivers.logout') }}" method="POST">
+                                        {{ csrf_field() }}
+                                        <input type="submit"value="Logout D"class="ui inverted button">
+                                    </form>
+                                    <i class="sign out icon"></i>
+                                    Logout
+                                </a>
 
-                    Ahmed.001883532@gmail.com
+                            </div>
+                        </div>
+                    @endif
+
+                    @if (Auth::guard('web')->check())
+                        <div class="ui floating labeled icon dropdown">
+                            <i class="setting icon"></i>
+                            <span>{{  Auth::guard('web')->user()->first_name }}</span>
+                            <div class="menu">
+                                <a class="item" href="{{route('passengers.profile.show',Auth::guard('web')->user()->id)}}">
+                                    <i class="user icon"></i>
+                                    Profile
+                                </a>
+                                <a class="item" href="{{route('passengers.dashboard.show')}}">
+                                    <i class="dashboard icon"></i>
+                                    DashBoard
+                                </a>
+                                <a class="item" onclick="logout()">
+                                    <form id="logout" style="display:none" action="{{ route('passengers.logout') }}" method="POST">
+                                        {{ csrf_field() }}
+                                        <input type="submit"value="Logout D"class="ui inverted button">
+                                    </form>
+                                    <i class="sign out icon"></i>
+                                    Logout
+                                </a>
+                            </div>
+                        </div>
+                    @endif
+
 
                 </div>
             </div>
+        </div>
+
+        <div class="ui text container">
+            <h1 class="ui inverted header">
+                Imagine-a-Company
+            </h1>
+            <h2>Do whatever you want when you want to.</h2>
+            <div class="ui huge primary button">Get Started <i class="right arrow icon"></i></div>
+        </div>
+
+    </div>
+
+    <div class="ui vertical stripe segment">
+        <div class="ui middle aligned stackable grid container">
+            <div class="row">
+                <div class="eight wide column">
+                    <h3 class="ui header">We Help Companies and Companions</h3>
+                    <p>We can give your company superpowers to do things that they never thought possible. Let us delight your customers and empower your needs...through pure data analytics.</p>
+                    <h3 class="ui header">We Make Bananas That Can Dance</h3>
+                    <p>Yes that's right, you thought it was the stuff of dreams, but even bananas can be bioengineered.</p>
+                </div>
+                <div class="six wide right floated column">
+                    <img src="assets/images/wireframe/white-image.png" class="ui large bordered rounded image">
+                </div>
+            </div>
+            <div class="row">
+                <div class="center aligned column">
+                    <a class="ui huge button">Check Them Out</a>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
-            <div class="media">
-                <i class="fa fa-phone" aria-hidden="true"></i>
-                <div class="media-body">
-                    <h5 class="mt-0">Phone Number</h5>
+    <div class="ui vertical stripe quote segment">
+        <div class="ui equal width stackable internally celled grid">
+            <div class="center aligned row">
+                <div class="column">
+                    <h3>"What a Company"</h3>
+                    <p>That is what they all say about us</p>
+                </div>
+                <div class="column">
+                    <h3>"I shouldn't have gone with their competitor."</h3>
+                    <p>
+                        <img src="assets/images/avatar/nan.jpg" class="ui avatar image"> <b>Nan</b> Chief Fun Officer Acme Toys
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                    0967-750544-3434
+    <div class="ui vertical stripe segment">
+        <div class="ui text container">
+            <h3 class="ui header">Breaking The Grid, Grabs Your Attention</h3>
+            <p>Instead of focusing on content creation and hard work, we have learned how to master the art of doing nothing by providing massive amounts of whitespace and generic content that can seem massive, monolithic and worth your attention.</p>
+            <a class="ui large button">Read More</a>
+            <h4 class="ui horizontal header divider">
+                <a href="#">Case Studies</a>
+            </h4>
+            <h3 class="ui header">Did We Tell You About Our Bananas?</h3>
+            <p>Yes I know you probably disregarded the earlier boasts as non-sequitur filler content, but its really true. It took years of gene splicing and combinatory DNA research, but our bananas can really dance.</p>
+            <a class="ui large button">I'm Still Quite Interested</a>
+        </div>
+    </div>
 
+
+    <div class="ui inverted vertical footer segment">
+        <div class="ui container">
+            <div class="ui stackable inverted divided equal height stackable grid">
+                <div class="three wide column">
+                    <h4 class="ui inverted header">About</h4>
+                    <div class="ui inverted link list">
+                        <a href="#" class="item">Sitemap</a>
+                        <a href="#" class="item">Contact Us</a>
+                        <a href="#" class="item">Religious Ceremonies</a>
+                        <a href="#" class="item">Gazebo Plans</a>
+                    </div>
+                </div>
+                <div class="three wide column">
+                    <h4 class="ui inverted header">Services</h4>
+                    <div class="ui inverted link list">
+                        <a href="#" class="item">Banana Pre-Order</a>
+                        <a href="#" class="item">DNA FAQ</a>
+                        <a href="#" class="item">How To Access</a>
+                        <a href="#" class="item">Favorite X-Men</a>
+                    </div>
+                </div>
+                <div class="seven wide column">
+                    <h4 class="ui inverted header">Footer Header</h4>
+                    <p>Extra space for a call to action inside the footer that could help re-engage users.</p>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 </body>
-<script src="{{asset('js/jquery.js')}}"></script>
-<script src="{{asset('js/popper.js')}}"></script>
-<script src="{{asset('js/app.js')}}"></script>
 <script>
-    function logout() {$('#logout').submit();}
+    $('.ui.dropdown').dropdown();
+    function logout()
+    {
+        $('#logout').submit();
+    }
 </script>
 </html>

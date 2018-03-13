@@ -98,9 +98,33 @@
                 </tbody>
             </table>
         </div>
+        <div class="ui floating labeled icon dropdown button fluid">
+            <i class="bell outline icon"></i>
+            <span class="text">Notifications {{count(Auth::guard('driver')->user()->unreadNotifications)}}</span>
+            <div class="menu">
+                <div class="header">
+                    unRead
+                </div>
+                <?php
+                    foreach (Auth::guard('driver')->user()->unreadNotifications as $notification)
+                    {
+                        $passenger = \App\Passenger::find($notification->data['passenger_id']);
+                        echo '<div class="item">'.
+                             '<img class="ui avatar image" src="'.asset('images/user.jpg').'">'.
+                             '<strong>'.$passenger->first_name . ' ' .$passenger->middle_name . ' ' .$passenger->last_name.'</strong>'.
+                             '<br><br>'.
+                             '<a class="ui button"href="'.route("passengers.accept.request",[$notification->data['appointment_id'],$passenger->id,$notification->id]).'">Accept</a>'.
+                             '<a class="ui button"href="'.route("passengers.reject.request",[$notification->data['appointment_id'],$passenger->id,$notification->id]).'">Reject</a>'.
+                             '</div>';
+                    }
+                ?>
+            </div>
+        </div>
     </div>
     <br>
     <br>
+
+
 @endsection
 @section('scripts')
     <script>

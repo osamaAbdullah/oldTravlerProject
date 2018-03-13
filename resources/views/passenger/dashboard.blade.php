@@ -21,7 +21,7 @@
                             <td>{{$appointment->destination_city}}</td>
                             <td>{{$appointment->destination_spot}}</td>
                             <td>{{$appointment->number_of_passengers}}</td>
-                            <td><a href="{{route('passengers.edit.appointment',$appointment->id)}}">Edit</a></td>
+                            <td><a href="#">Edit</a></td>
                             <td>
                                 <div id="cancel"class="ui button transparent cancel">Delete</div>
                                 <div class="ui basic modal">
@@ -123,8 +123,27 @@
             <tbody id="body">
             </tbody>
         </table>
-
-
+        <br>
+        <div class="ui floating labeled icon dropdown button fluid">
+            <i class="bell outline icon"></i>
+            <span class="text">Notifications {{count(Auth::guard('web')->user()->unreadNotifications)}}</span>
+            <div class="menu">
+                <div class="header">
+                    unRead
+                </div>
+                <?php
+                foreach (Auth::guard('web')->user()->unreadNotifications as $notification)
+                {
+                    $driver = \App\Driver::find($notification->data['driver_id']);
+                    $response = ($notification->data['response'] == 1)?'Accepted your Request':'Rejected your request';
+                    echo '<div class="item">'.
+                        '<img class="ui avatar image" src="'.asset('images/user.jpg').'">'.
+                        '<strong>'.$driver->first_name . ' ' .$driver->middle_name . ' ' .$driver->last_name.'</strong> <pre>     '.$response. '</pre>'.
+                        '</div>';
+                }
+                ?>
+            </div>
+        </div>
     </div>
     <br>
     <br>
@@ -148,5 +167,6 @@
                 }
             });
         });
+
     </script>
 @endsection

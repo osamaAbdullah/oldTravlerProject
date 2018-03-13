@@ -1,12 +1,13 @@
-<div class="container">
+<div class="ui container">
     @if(Session::has('success'))
-        <div class="alert alert-success">
-            <strong>Success:</strong> {{Session::get('success')}}
+        <div class="ui green message">
+            <strong>Success:</strong>{{Session::get('success')}}
         </div>
         <br>
     @endif
+
     @if(count($errors)>0)
-        <div class="alert alert-danger">
+        <div class="ui red message">
             <strong>Errors:</strong>
             <ul>
                 @foreach($errors->all() as $error)

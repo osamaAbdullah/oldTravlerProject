@@ -2,105 +2,6 @@
 
 @section('title','Register')
 @section('content')
-
-    <div class="container">
-    <form class="form-container">
-       <h3 style="text-align: center; color: snow">Driver SignUp</h3>
-        <div class="form-row">
-            <div class="form-group col-md-4">
-
-                <input type="text" class="form-control" id="inputEmail4" placeholder="FirstName">
-            </div>
-            <div class="form-group col-md-4">
-
-                <input type="text" class="form-control" id="inputPassword4" placeholder="MiddleName">
-            </div>
-            <div class="form-group col-md-4">
-
-                <input type="text" class="form-control" id="inputPassword4" placeholder="LastName">
-            </div>
-        </div>
-
-        <div class="form-row">
-            <div class="form-group col-md-4">
-
-                <input type="email" class="form-control" id="inputEmail4" placeholder="Email">
-            </div>
-            <div class="form-group col-md-4">
-
-                <input type="tel" class="form-control" id="inputPassword4" placeholder="PhoneNumber">
-            </div>
-            <div class="form-group col-md-4">
-
-                <input type="date" class="form-control" id="inputPassword4" placeholder="Birthday">
-            </div>
-        </div>
-
-        <div class="form-row">
-            <div class="form-group col">
-
-                <select class="form-control" id="inlineFormCustomSelect">
-                    <option selected>Gender</option>
-                    <option value="1">Male</option>
-                    <option value="2">FeMale</option>
-                </select>
-
-            </div>
-            <div class="form-group col">
-                <select class="form-control" id="inlineFormCustomSelect">
-                    <option selected>Type Of Vachel</option>
-                    <option value="1">Car</option>
-                    <option value="2">Bus</option>
-                    <option value="3">Mini</option>
-                    <option value="3">Other</option>
-                </select>
-            </div>
-            <div class="form-group col-7">
-
-                <input type="text" class="form-control" id="inputPassword4" placeholder="Bio">
-            </div>
-        </div>
-        <div class="form-row">
-        <div class="form-group col-md-4">
-
-            <input type="text" class="form-control" id="inputEmail4" placeholder="VichelBio">
-        </div>
-        <div class="form-group col-md-4">
-
-            <input type="text" class="form-control" id="inputPassword4" placeholder="Address">
-        </div>
-        <div class="form-group col-md-4">
-
-            <input type="number" class="form-control" id="inputPassword4" placeholder="MaxPassenger">
-        </div>
-    </div>
-
-        <div class="form-row">
-        <div class="form-group col-md-6">
-
-            <input type="password" class="form-control"  placeholder="Password">
-        </div>
-        <div class="form-group col-md-6">
-
-            <input type="Password" class="form-control"  placeholder="PasswordConfirm">
-        </div>
-    </div>
-
-        <div class="form-row">
-            <div class="form-group col-md-6">
-
-                <button type="submit" class="btn btn-primary btn-block">Create</button>
-            </div>
-            <div class="form-group col-md-6">
-
-                <button type="submit" class="btn btn-danger btn-block">Reset</button>
-            </div>
-        </div>
-
-    </form>
-    </div>
-
-    <!--
     <div class="ui container">
         <form class="ui form piled segment"method="POST">
             {{ csrf_field() }}
@@ -208,10 +109,7 @@
             </div>
         </form>
     </div>
-
-    -->
 @endsection
-
 @section('scripts')
     <script src="{{asset('js/calendar.js')}}"></script>
     <script>

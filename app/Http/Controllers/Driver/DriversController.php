@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Driver;
 use App\Appointment;
 use App\Driver;
 use App\Http\Controllers\Controller;
+use App\Notifications\PassengerRequestResponse;
+use App\Passenger;
 use App\PassengerRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -181,6 +183,44 @@ class DriversController extends Controller
     {
         $passengerRequest = PassengerRequest::find($id);
         return view('driver.view_request',['passengerRequest' => $passengerRequest]);
+    }
+
+    //accept the passenger's request
+    public function acceptPassengerRequest(Appointment $appointment,Passenger $passenger,$notification_id)
+    {
+        foreach ($appointment->passengers as $_passenger)
+        {
+            if (DB::select('SELECT * FROM `appointment_passenger` WHERE `passenger_id` = \''.$passenger->id.'\' AND `appointment_id` = \''.$appointment->id.'\''))
+            {
+                DB::update('UPDATE `appointment_passenger` SET `verification` = 1 WHERE `passenger_id` = \''.$passenger->id.'\' AND `appointment_id` = \''.$appointment->id.'\' ');
+                $passenger->notify(new PassengerRequestResponse(Auth::guard('driver')->user()->id,1));
+                DB::delete('DELETE FROM `notifications` WHERE `id` = \''.$notification_id.'\'');
+                $data = DB::select('SELECT * FROM `appointment_passenger` WHERE `id` = \''.$_passenger->id.'\' ');
+                $appointment->number_of_passengers += $data[0]->number_of_passengers ;
+                $appointment->number_of_mail += $data[0]->number_of_mail ;
+                $appointment->update();
+                break;
+            }
+        }
+        Session::flash('success', 'You Accepted '.$passenger->first_name .' '.$passenger->middle_name .' '.$passenger->last_name.'\'s Request Successfully');
+        return redirect()->route('drivers.dashboard.show');
+    }
+
+    //accept the passenger's request
+    public function rejectPassengerRequest(Appointment $appointment,Passenger $passenger,$notification_id)
+    {
+        foreach ($appointment->passengers as $_passenger)
+        {
+            if (DB::select('SELECT * FROM `appointment_passenger` WHERE `passenger_id` = \''.$passenger->id.'\' AND `appointment_id` = \''.$appointment->id.'\''))
+            {
+                DB::delete('DELETE FROM `appointment_passenger`  WHERE `passenger_id` = \''.$passenger->id.'\' AND `appointment_id` = \''.$appointment->id.'\' ');
+                $passenger->notify(new PassengerRequestResponse(Auth::guard('driver')->user()->id,0));
+                DB::delete('DELETE FROM `notifications` WHERE `id` = \''.$notification_id.'\'');
+                break;
+            }
+        }
+        Session::flash('success', 'You Rejected '.$passenger->first_name .' '.$passenger->middle_name .' '.$passenger->last_name.'\'s Request Successfully');
+        return redirect()->route('drivers.dashboard.show');
     }
 
 
